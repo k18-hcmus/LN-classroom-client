@@ -12,7 +12,7 @@ const HorizontalCenterContainer = styled(Box)(({
 
 const Label = styled(Typography)(({ theme }) => ({
     color: theme.colors.texting.textLabel,
-    fontSize: theme.fontSizes.sizeLabel,
+    fontSize: theme.fontSizes.sizeLabel, 
 }))
 
 const Line = styled(Divider)(({ theme }) => ({
@@ -57,7 +57,7 @@ const PeopleClass: FunctionComponent = () => {
             <HorizontalCenterContainer>
                 <Grid item xs={PEOPLE_GRID_WIDTH} sx={{ width: "100%" }}>
                     <Label>
-                        Teacher
+                        Teachers
                     </Label>
                     <Line></Line>
                     <List>
@@ -85,7 +85,7 @@ const PeopleClass: FunctionComponent = () => {
             <HorizontalCenterContainer>
                 <Grid item xs={7} sx={{ width: "100%" }}>
                     <Label>
-                        Student
+                        Students
                     </Label>
                     <Line/>
                     <List>
