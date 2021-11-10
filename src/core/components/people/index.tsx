@@ -2,6 +2,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { Avatar, Box, Divider, Grid, List, ListItem, ListItemAvatar, ListItemText, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import { FunctionComponent } from 'react';
+import { PEOPLE_GRID_WIDTH } from "../../../shared/constants";
 
 const HorizontalCenterContainer = styled(Box)(({
     display: "flex",
@@ -9,6 +10,14 @@ const HorizontalCenterContainer = styled(Box)(({
     justifyContent: "center",
 }));
 
+const Label = styled(Typography)(({ theme }) => ({
+    color: theme.colors.texting.textLabel,
+    fontSize: theme.fontSizes.sizeLabel,
+}))
+
+const Line = styled(Divider)(({ theme }) => ({
+    borderColor: theme.colors.texting.textLabel,
+}))
 
 const PeopleClass: FunctionComponent = () => {
     const data = [
@@ -41,62 +50,62 @@ const PeopleClass: FunctionComponent = () => {
             role: "student"
         },
     ]
-    const teachers =data.filter((e)=>e.role==="teacher")
-    const students=data.filter((e)=>e.role==="student")
+    const teachers = data.filter((e) => e.role === "teacher")
+    const students = data.filter((e) => e.role === "student")
     return (
         <>
             <HorizontalCenterContainer>
-                <Grid item xs={7} sx={{ width: "100%" }}>
-                    <Typography sx={{ mt: 4, mb: 0 }} variant="h4" component="div" color="#085c9a">
+                <Grid item xs={PEOPLE_GRID_WIDTH} sx={{ width: "100%" }}>
+                    <Label>
                         Teacher
-                    </Typography>
-                    <Divider color="#085c9a" />
+                    </Label>
+                    <Line></Line>
                     <List>
-                        {teachers.map((teacher)=>(
-                            <ListItem>
-                            <ListItemAvatar>
-                                <Avatar>
-                                    <PersonIcon
-                                    color="primary"
-                                    fontSize="large"
-                                    />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText
-                                primary={teacher.name}
-                                secondary={null}
-                            />
-                        </ListItem>
+                        {teachers.map((teacher, index) => (
+                            <ListItem key={index}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <PersonIcon
+                                            color="primary"
+                                            fontSize="large"
+                                        />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={teacher.name}
+                                    secondary={null}
+                                />
+                            </ListItem>
                         ))}
-                            
-                        
+
+
                     </List>
                 </Grid>
             </HorizontalCenterContainer>
             <HorizontalCenterContainer>
                 <Grid item xs={7} sx={{ width: "100%" }}>
-                    <Typography sx={{ mt: 4, mb: 0 }} variant="h4" component="div" color="#085c9a">
+                    <Label>
                         Student
-                    </Typography>
-                    <Divider color="#085c9a" />
+                    </Label>
+                    <Line/>
                     <List>
-                        {students.map((student)=>(
-                           <ListItem>
-                           <ListItemAvatar>
-                               <Avatar>
-                               <PersonIcon
-                                    color="action"
-                                    fontSize="large"
-                                    />
-                               </Avatar>
-                           </ListItemAvatar>
-                           <ListItemText
-                               primary={student.name}
-                               secondary={null}
-                           />
-                       </ListItem> 
+                        {students.map((student, index) => (
+                            <ListItem key={index}>
+                                <ListItemAvatar>
+                                    <Avatar>
+                                        <PersonIcon
+                                            color="action"
+                                            fontSize="large"
+                                        />
+                                    </Avatar>
+                                </ListItemAvatar>
+                                <ListItemText
+                                    primary={student.name}
+                                    secondary={null}
+                                />
+                            </ListItem>
                         ))}
-                        
+
                     </List>
                 </Grid>
             </HorizontalCenterContainer>
