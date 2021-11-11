@@ -4,7 +4,7 @@ export interface FontSizes {
     changePass:number,
 }
 
-const fontSizes = {
+const fontSizes: FontSizes = {
     default: 14,
     sizeLabel:25,
     changePass:18
