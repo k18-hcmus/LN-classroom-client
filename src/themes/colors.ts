@@ -5,7 +5,10 @@ export interface Colors {
         white: string,
     },
     texting: {
-        sideBarLabel: string
+        sideBarLabel: string,
+        textLabel: string,
+        button:string,
+        classcode:string,
     }
 }
 
@@ -16,7 +19,10 @@ const colors = {
         white: "#fff"
     },
     texting: {
-        sideBarLabel: '#5f6368'
+        sideBarLabel: '#5f6368',
+        textLabel: '#0a69a3',
+        button:"#0E6E2E",
+        classcode:"#5F7076"
     }
 }
 
