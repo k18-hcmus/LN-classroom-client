@@ -19,11 +19,12 @@ const Banner = styled(Box)(({ theme }) => ({
     marginTop: theme.spacing(5)
 }))
 
-const CardBanner = styled(Card)(({
+const CardBanner = styled(Card)(({ theme }) => ({
     width: "100%",
     height: "100%",
     position: "relative",
     textAlign: "center",
+    borderRadius: theme.spacing(2.75)
 }))
 
 const NameClass = styled(Typography)(({ theme }) => ({
@@ -50,6 +51,9 @@ const InforIcon = styled(ErrorOutlineIcon)(({ theme }) => ({
 const InforButton = styled(IconButton)(({ theme }) => ({
     borderRadius: "70%",
     backgroundColor: theme.colors.texting.button,
+    position: "absolute",
+    bottom: theme.spacing(4),
+    right: theme.spacing(8)
 }))
 
 const ClassInforText = styled(Typography)(({ theme }) => ({
@@ -58,7 +62,7 @@ const ClassInforText = styled(Typography)(({ theme }) => ({
 }))
 
 const ClassInforCom = styled(Card)(({ theme }) => ({
-    width: "100%",
+    width: "98%",
     height: theme.spacing(20),
     display: "flex",
     flexDirection: "column",
@@ -176,9 +180,9 @@ const ClassDetail: FunctionComponent = () => {
                 {inforButton ?
                     (
                         <ClassInforCom>
-                            <ClassInforText>Class Code:{code}</ClassInforText>
-                            <ClassInforText>Topic:{topic}</ClassInforText>
-                            <ClassInforText>Topic:{roomId}</ClassInforText>
+                            <ClassInforText>School Year:{year}</ClassInforText>
+                            <ClassInforText>Description:</ClassInforText>
+                            {topic}
                         </ClassInforCom>
                     )
                     :
@@ -193,57 +197,57 @@ const ClassDetail: FunctionComponent = () => {
                             Class Code:
                         </ClassCodeText>
                         <MoreButton
-                        onClick={handleMoreButton}
+                            onClick={handleMoreButton}
                         >
                             <IconMoreCodeClass></IconMoreCodeClass>
                         </MoreButton>
                     </RowClassCode>
                     <CodeClassText>{code}</CodeClassText>
-                    {moreButton?
-                    (
-                        <MoreCard>
-                        <MoreList>
-                            <MoreListItem disablePadding>
-                                <MoreListItemButton>
-                                    <ListItemIcon>
-                                        <InsertLinkIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Copy link invite" />
-                                </MoreListItemButton>
-                            </MoreListItem>
-                            <MoreListItem disablePadding>
-                                <MoreListItemButton>
-                                    <ListItemIcon>
-                                        <ContentCopyIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Copy class code" />
-                                </MoreListItemButton>
-                            </MoreListItem>
-                            <MoreListItem disablePadding>
-                                <MoreListItemButton>
-                                    <ListItemIcon>
-                                        <ReplayIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Reset class code" />
-                                </MoreListItemButton>
-                            </MoreListItem>
-                            <MoreListItem disablePadding>
-                                <MoreListItemButton>
-                                    <ListItemIcon>
-                                        <CancelPresentationIcon />
-                                    </ListItemIcon>
-                                    <ListItemText primary="Close" />
-                                </MoreListItemButton>
-                            </MoreListItem>
-                        </MoreList>
-                    </MoreCard>
-                    ): 
-                    (
-                        <>
-                        </>
-                    )
+                    {moreButton ?
+                        (
+                            <MoreCard>
+                                <MoreList>
+                                    <MoreListItem disablePadding>
+                                        <MoreListItemButton>
+                                            <ListItemIcon>
+                                                <InsertLinkIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Copy link invite" />
+                                        </MoreListItemButton>
+                                    </MoreListItem>
+                                    <MoreListItem disablePadding>
+                                        <MoreListItemButton>
+                                            <ListItemIcon>
+                                                <ContentCopyIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Copy class code" />
+                                        </MoreListItemButton>
+                                    </MoreListItem>
+                                    <MoreListItem disablePadding>
+                                        <MoreListItemButton>
+                                            <ListItemIcon>
+                                                <ReplayIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Reset class code" />
+                                        </MoreListItemButton>
+                                    </MoreListItem>
+                                    <MoreListItem disablePadding>
+                                        <MoreListItemButton>
+                                            <ListItemIcon>
+                                                <CancelPresentationIcon />
+                                            </ListItemIcon>
+                                            <ListItemText primary="Close" />
+                                        </MoreListItemButton>
+                                    </MoreListItem>
+                                </MoreList>
+                            </MoreCard>
+                        ) :
+                        (
+                            <>
+                            </>
+                        )
                     }
-                    
+
                 </ClassCode>
             </Banner>
         </HorizontalCenterContainer>

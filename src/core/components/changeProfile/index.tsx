@@ -56,8 +56,16 @@ const ButtonChangePass = styled(Button)(({ theme }) => ({
 const GridButton = styled(Grid)(({ theme }) => ({
     display: "flex",
     flexDirection: "row",
+    justifyContent: "flex-end",
+    alignItems: "center",
+}))
+
+const GridButtonChangePass = styled(Grid)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    marginTop: theme.spacing(-8)
 }))
 
 const AvatarProfile = styled(Avatar)(({ theme }) => ({
@@ -89,6 +97,11 @@ const ChangeAvatarButton = styled(Button)(({ theme }) => ({
 const ChangeProfile: FunctionComponent = () => {
     const [changePass, setChangePass] = useState(false)
     const [showPass, setShowPass] = useState(false)
+    const oldFirstName = "Nang"
+    const oldLastName = "Tran"
+    const [firstName, setFirstName] = useState(oldFirstName)
+    const [lastName, setLastName] = useState(oldLastName)
+    
     const oldPassword = "oldpassword"
     const newPassword = "newpassword"
     const confPassword = "confirmpass"
@@ -122,14 +135,24 @@ const ChangeProfile: FunctionComponent = () => {
                         <TextField
                             id="outlined-disabled"
                             label="Firstname"
-                            defaultValue="Tran"
+                            defaultValue={firstName}
                             InputLabelProps={{ style: { fontSize: 18, fontWeight: 550 } }}
+                            onChange={event => {
+                                const value = event.target.value
+                                setFirstName(value)
+                                console.log(firstName)
+                            }}
                         />
                         <TextField
                             id="outlined-disabled"
                             label="Lastname"
-                            defaultValue="Nang"
+                            defaultValue={lastName}
                             InputLabelProps={{ style: { fontSize: 18, fontWeight: 550 } }}
+                            onChange={event => {
+                                const value = event.target.value
+                                setLastName(value)
+                                console.log(lastName)
+                            }}
                         />
                     </RowBox>
                     <RowBox>
@@ -167,13 +190,15 @@ const ChangeProfile: FunctionComponent = () => {
                         }}
                     />
                     {!changePass ? (
-                        <ChangePass
-                            href="#"
-                            underline="always"
-                            onClick={handleChangePassButton}
-                        >
-                            {'Change Password?'}
-                        </ChangePass>
+                        <>
+                            <ChangePass
+                                href="#"
+                                underline="always"
+                                onClick={handleChangePassButton}
+                            >
+                                {'Change Password?'}
+                            </ChangePass>
+                        </>
                     ) :
                         (
                             <FormChangePass>
@@ -237,13 +262,13 @@ const ChangeProfile: FunctionComponent = () => {
                                 </FormChangePass>
                                 <GridButton>
                                     <ButtonChangePass
-                                        variant="contained"
+                                        variant="outlined"
                                         color="success"
                                     >
                                         Save
                                     </ButtonChangePass>
                                     <ButtonChangePass
-                                        variant="contained"
+                                        variant="outlined"
                                         color="error"
                                         onClick={handleChangePassButton}
                                     >
@@ -254,7 +279,23 @@ const ChangeProfile: FunctionComponent = () => {
                         )
                     }
                 </ColumnBox>
-
+                {
+                    ((firstName !== oldFirstName) || (lastName !== oldLastName))?
+                (
+                <GridButtonChangePass>
+                    <ButtonChangePass
+                        variant="contained"
+                        color="primary"
+                    >
+                        Save
+                    </ButtonChangePass>
+                </GridButtonChangePass>
+                ):
+                (
+                <>
+                </>
+                )
+                }
             </Box>
         </HorizontalCenterContainer>
 
