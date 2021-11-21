@@ -7,7 +7,6 @@ import { getAllClassroom } from "../../slices/classroom-slice";
 import { setModalOpen } from "../../slices/create-class-modal-sclice";
 import { selectRoute } from "../../slices/route-slice";
 import ClassroomCard from "../components/classroom-card";
-import PeopleClass from "../components/people";
 
 const Wrapper = styled(Box)(({ theme }) => ({
     flexGrow: 1,
@@ -48,7 +47,7 @@ const Home: FunctionComponent<HomeProps> = ({ name }) => {
 
     return (
         <Wrapper>
-            {/* {
+            {
                 classrooms.length > 0 ? (
                     <>
                         <FormControl component="fieldset">
@@ -89,8 +88,7 @@ const Home: FunctionComponent<HomeProps> = ({ name }) => {
 
                     </VerticalCenterContainer>
 
-            }  */}
-            <PeopleClass></PeopleClass>
+            }  
         </Wrapper>
     );
 }
