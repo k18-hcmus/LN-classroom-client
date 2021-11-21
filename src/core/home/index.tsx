@@ -8,7 +8,6 @@ import { setModalOpen } from "../../slices/create-class-modal-sclice";
 import { selectRoute } from "../../slices/route-slice";
 import ClassroomCard from "../components/classroom-card";
 import PeopleClass from "../components/people";
-import ClassDetail from "../components/classdetail"
 
 const Wrapper = styled(Box)(({ theme }) => ({
     flexGrow: 1,
@@ -90,7 +89,7 @@ const Home: FunctionComponent<HomeProps> = ({ name }) => {
 
                     </VerticalCenterContainer>
 
-            } */}
+            }  */}
             <PeopleClass></PeopleClass>
         </Wrapper>
     );
