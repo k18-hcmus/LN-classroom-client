@@ -18,6 +18,8 @@ import { setModalOpen } from '../../slices/create-class-modal-sclice';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useOnClickOutside } from 'usehooks-ts';
+import { useHistory } from 'react-router-dom'
+import { logout } from '../../services/auth';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -92,6 +94,7 @@ export default function PrimarySearchAppBar() {
 
   const [isAccountButton, setIsAccountButton] = React.useState(false)
 
+  const history = useHistory()
   const dispatch = useAppDispatch()
 
   const isMenuOpen = Boolean(anchorEl);
@@ -128,6 +131,19 @@ export default function PrimarySearchAppBar() {
   }
 
   useOnClickOutside(ref, handleClickOutside)
+  const handleMyProfileClick = () => {
+    history.push('/profile')
+    setIsAccountButton(false)
+  }
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      window.location.href = '/login'
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
   const menuId = 'primary-search-account-menu';
   const renderMenu = (
@@ -226,7 +242,7 @@ export default function PrimarySearchAppBar() {
               (
                 <AccountCard>
                   <AccountList>
-                    <AccountListItem disablePadding>
+                    <AccountListItem disablePadding onClick={handleMyProfileClick} >
                       <AccountListItemButton>
                         <ListItemIcon>
                           <PersonOutlineIcon />
@@ -235,7 +251,7 @@ export default function PrimarySearchAppBar() {
                       </AccountListItemButton>
                     </AccountListItem>
                     <Line />
-                    <AccountListItem disablePadding>
+                    <AccountListItem disablePadding onClick={handleLogout}>
                       <AccountListItemButton>
                         <ListItemIcon>
                           <LogoutIcon />

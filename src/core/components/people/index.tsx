@@ -222,7 +222,6 @@ const PeopleClass: FunctionComponent = () => {
             setIsCheckStudent(newCheckStudents)
             if (newCheckStudents.length===students.length){
                 setIsCheckAllStudent(true)
-                console.log(isCheckAllStudent)
             }
         }
     }
