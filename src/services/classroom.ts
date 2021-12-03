@@ -39,3 +39,8 @@ export const joinClassroomByClassCode = (classCode: string) => {
 export const removeFromClassroom = (classId: string, userId: string, isStudent: boolean) => {
     return api.delete(BASE_URL + "remove", { data: { classId, userId, isStudent } })
 }
+
+export const getGradeStructure = (classId: string) => {
+    return api.get(BASE_URL + "grade-structure", { params: { classId}})
+}
+

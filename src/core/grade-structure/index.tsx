@@ -1,23 +1,14 @@
-import React, { useState } from "react";
+import { Box, Card, Divider, Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import React, { FunctionComponent, useEffect, useState } from "react";
 import {
-    DragDropContext,
-    Droppable,
-    Draggable,
-    DropResult,
-    ResponderProvided,
-    DraggableProvided,
-    DroppableProvided,
-    DraggableStateSnapshot
+    DragDropContext, Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DropResult,
+    ResponderProvided
 } from "react-beautiful-dnd";
-import {
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow
-} from "@mui/material";
-import ReorderIcon from "@mui/icons-material/Reorder";
+import { getGradeStructure } from '../../services/classroom';
+import CardCreator from './components/card-creator';
+
+import AddCardCreator from "./components/add-card-creator";
 
 /* 
 Note: this is a working example, but more can be done to improve it.
@@ -34,15 +25,78 @@ components, the getSnapshotBeforeUpdate() lifecycle method can work with getBoun
 */
 
 export interface DataItem {
-    uuid: string;
-    description: string;
-    unitPrice: number;
-    quantity: number;
+    _id: string;
+    title: string;
+    point: number;
+    description?: string
 }
 
-export const MaterialTable: React.FC<{ items: DataItem[] }> = ({ items }) => {
+const HorizontalCenterContainer = styled(Box)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%",
+    // backgroundColor: theme.colors.background.structBackGround
+}))
+
+const BoxContainer = styled(Box)(({ theme }) => ({
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    width: "70%",
+    marginTop: theme.spacing(10)
+}))
+
+const ListContainer = styled(Box)(({ theme }) => ({
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+}))
+
+const GradeInfor = styled(Card)(({ theme }) => ({
+    width: "60%",
+    height: theme.spacing(35),
+    display: "flex",
+    flexDirection: "column",
+    backgroundColor: theme.colors.background.white,
+    marginTop: theme.spacing(6),
+    borderRadius: theme.spacing(2.75)
+}))
+
+const GradeInforTitle = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.gradeStruct,
+    fontWeight: "bold",
+    marginTop: theme.spacing(4),
+    marginLeft: theme.spacing(8),
+}))
+
+const GradeInforTitleSub = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.changePass,
+    fontWeight: "bold",
+    marginBottom: theme.spacing(4),
+    marginLeft: theme.spacing(8)
+}))
+
+const LineGradeInfor = styled(Divider)(({ theme }) => ({
+    width: "100%",
+    height: theme.spacing(2),
+    backgroundColor: theme.colors.texting.textLabel
+}))
+
+interface GradeStructureProps {
+    gradeStructure: DataItem[];
+}
+
+export const GradeStructure: FunctionComponent<GradeStructureProps> = ({gradeStructure}) => {
     // cache the items provided via props in state for purposes of this demo
-    const [localItems, setLocalItems] = useState<Array<DataItem>>(items);
+    const [localItems, setLocalItems] = useState<Array<DataItem>>(gradeStructure);
+    const [isAdd, setIsAdd] = React.useState(localItems.length)
+
+    useEffect(() => {
+        setLocalItems(gradeStructure);
+    }, [gradeStructure])
 
     // normally one would commit/save any order changes via an api call here...
     const handleDragEnd = (result: DropResult, provided?: ResponderProvided) => {
@@ -65,35 +119,28 @@ export const MaterialTable: React.FC<{ items: DataItem[] }> = ({ items }) => {
     };
 
     return (
-        <TableContainer>
-            <Table>
-                <colgroup>
-                    <col style={{ width: "5%" }} />
-                    <col style={{ width: "35%" }} />
-                    <col style={{ width: "20%" }} />
-                    <col style={{ width: "20%" }} />
-                    <col style={{ width: "20%" }} />
-                </colgroup>
-                <TableHead>
-                    <TableRow>
-                        <TableCell align="left">&nbsp;</TableCell>
-                        <TableCell>Description</TableCell>
-                        <TableCell align="right">Unit Cost</TableCell>
-                        <TableCell align="right">Qty/Rate</TableCell>
-                        <TableCell align="right">Amount</TableCell>
-                    </TableRow>
-                </TableHead>
+        <HorizontalCenterContainer>
+            <BoxContainer>
+                <GradeInfor>
+                    <LineGradeInfor />
+                    <GradeInforTitle>
+                        Grade Structure
+                    </GradeInforTitle>
+                    <GradeInforTitleSub>
+                        Edit your classroom grade structure
+                    </GradeInforTitleSub>
+                </GradeInfor>
                 <DragDropContext onDragEnd={handleDragEnd}>
                     <Droppable droppableId="droppable" direction="vertical">
                         {(droppableProvided: DroppableProvided) => (
-                            <TableBody
+                            <ListContainer
                                 ref={droppableProvided.innerRef}
                                 {...droppableProvided.droppableProps}
                             >
                                 {localItems.map((item: DataItem, index: number) => (
                                     <Draggable
-                                        key={item.uuid}
-                                        draggableId={item.uuid}
+                                        key={item._id}
+                                        draggableId={item._id}
                                         index={index}
                                     >
                                         {(
@@ -101,39 +148,21 @@ export const MaterialTable: React.FC<{ items: DataItem[] }> = ({ items }) => {
                                             snapshot: DraggableStateSnapshot
                                         ) => {
                                             return (
-                                                <TableRow
-                                                    ref={draggableProvided.innerRef}
-                                                    {...draggableProvided.draggableProps}
-                                                    style={{
-                                                        ...draggableProvided.draggableProps.style,
-                                                        background: snapshot.isDragging
-                                                            ? "rgba(245,245,245, 0.75)"
-                                                            : "none"
-                                                    }}
-                                                >
-                                                    {/* note: `snapshot.isDragging` is useful to style or modify behaviour of dragged cells */}
-                                                    <TableCell align="left">
-                                                        <div {...draggableProvided.dragHandleProps}>
-                                                            <ReorderIcon />
-                                                        </div>
-                                                    </TableCell>
-                                                    <TableCell>{item.description}</TableCell>
-                                                    <TableCell align="right">{item.unitPrice}</TableCell>
-                                                    <TableCell align="right">{item.quantity}</TableCell>
-                                                    <TableCell align="right">
-                                                        {(item.unitPrice * item.quantity).toFixed(2)}
-                                                    </TableCell>
-                                                </TableRow>
+                                                <CardCreator 
+                                                    draggableProvided={draggableProvided}
+                                                    item={item}
+                                                />
                                             );
                                         }}
                                     </Draggable>
                                 ))}
                                 {droppableProvided.placeholder}
-                            </TableBody>
+                                <AddCardCreator/>
+                            </ListContainer>
                         )}
                     </Droppable>
                 </DragDropContext>
-            </Table>
-        </TableContainer>
+            </BoxContainer>
+        </HorizontalCenterContainer >
     );
 };

@@ -1,16 +1,17 @@
-import { FunctionComponent, useState } from "react";
-import { styled } from '@mui/material/styles';
-import { Box, CardMedia, Card, Typography, IconButton, List, ListItem, ListItemIcon, ListItemText, ListItemButton } from '@mui/material';
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import InsertLinkIcon from '@mui/icons-material/InsertLink';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import ReplayIcon from '@mui/icons-material/Replay';
 import CancelPresentationIcon from '@mui/icons-material/CancelPresentation';
-import { Classroom, copyInviteLink, resetClassCode } from "../../../slices/classroom-slice";
-import { copyToClipboard } from "../../../utils/function";
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import InsertLinkIcon from '@mui/icons-material/InsertLink';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ReplayIcon from '@mui/icons-material/Replay';
+import { Box, Button, Card, CardMedia, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { FunctionComponent, useState } from "react";
+import { useHistory } from "react-router";
 import { useAppDispatch } from "../../../app/hooks";
 import { createAlert } from "../../../slices/alert-slice";
+import { Classroom, copyInviteLink, resetClassCode } from "../../../slices/classroom-slice";
+import { copyToClipboard } from "../../../utils/function";
 
 const HorizontalCenterContainer = styled(Box)(({
     width: "80%",
@@ -151,6 +152,8 @@ const MainStream: FunctionComponent<MainStreamProps> = ({ classroom }) => {
     const [inforButton, setInforButton] = useState(false)
     const [moreButton, setMoreButton] = useState(false)
     const dispatch = useAppDispatch()
+    const history = useHistory()
+
     const handleInforButton = () => {
         setInforButton(!inforButton)
     }
@@ -174,6 +177,9 @@ const MainStream: FunctionComponent<MainStreamProps> = ({ classroom }) => {
         dispatch(resetClassCode(classroom._id))
     }
 
+    const handleMoveToGradeStructure = () => {
+        history.push(`${classroom._id}/grade-structure`)
+    }
     return (
         <HorizontalCenterContainer>
             <Banner>
@@ -191,6 +197,7 @@ const MainStream: FunctionComponent<MainStreamProps> = ({ classroom }) => {
                         <InforIcon />
                     </InforButton>
                 </CardBanner>
+                <Button onClick={handleMoveToGradeStructure}>Move to Grade Structure</Button>
                 {(inforButton && classroom.description && classroom.description.length > 0) &&
                     (
                         <ClassInforCom>
