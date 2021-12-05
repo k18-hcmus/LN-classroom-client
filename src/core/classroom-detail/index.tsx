@@ -60,15 +60,14 @@ const ClassroomDetail: FunctionComponent = () => {
                                 <TabList onChange={handleChange} aria-label="lab API tabs example">
                                     <Tab label="Main Stream" value="1" />
                                     <Tab label="People" value="2" />
+                                    <Tab label="Grade Structure" value="3" />
                                 </TabList>
                             </HorizontalCenterContainer>
                         </Box>
-                        <TabPanel value="1" key={1}><MainStream classroom={classroom} /></TabPanel>
+                        <TabPanel value="1" key={1}><MainStream classroom={classroom} gradeStructure={gradeStructure}/></TabPanel>
                         <TabPanel value="2" key={2}><People classroom={classroom} /></TabPanel>
+                        <TabPanel value="3" key={3}><GradeStructure gradeStructure={gradeStructure} classId={classroom._id!}/></TabPanel>
                     </TabContext>
-                </Route>
-                <Route path={`${path}/grade-structure`}>
-                    <GradeStructure gradeStructure={gradeStructure} />
                 </Route>
             </Switch>
         </>) : <PageNotFound />

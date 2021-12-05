@@ -6,10 +6,14 @@ import { styled } from '@mui/material/styles';
 import { FunctionComponent, useState } from "react";
 import { DraggableProvided } from "react-beautiful-dnd";
 import { DataItem } from '..';
+import { notEmptyValidation, useValidator, useValidatorManagement } from '../../../utils/validator';
 
 interface CardCreatorProps {
     draggableProvided: DraggableProvided,
-    item: DataItem
+    item: DataItem,
+    classId:string,
+    handleDelete:(classId:string,gradeStructureId:string)=>void,
+    handleEditGrade:(classId:string,gradeStructureId:string,title:string,description:string,point:number)=>void
 }
 
 const CardCreatorComponent = styled(Box)(({ theme }) => ({
@@ -75,11 +79,24 @@ const RemoveButton = styled(Button)(({theme})=>({
     borderRadius:theme.spacing(2.75)
 }))
 
-const CardCreator: FunctionComponent<CardCreatorProps> = ({ item, draggableProvided }) => {
+const CardCreator: FunctionComponent<CardCreatorProps> = ({ draggableProvided,item,classId,handleDelete,handleEditGrade}) => {
     const [isEdit, setIsEdit] = useState(false);
+
+    const validatorFields=useValidatorManagement()
+    
+    const title = useValidator("title", notEmptyValidation,item.title,validatorFields )
+    const description = useValidator("description",null,item.description,validatorFields)
+    const point = useValidator("point", notEmptyValidation,item.point.toString(),validatorFields)
+
+    const handleOnChange=validatorFields.handleOnChange
 
     const handleSave = () => {
         setIsEdit(false)
+        validatorFields.validate()
+        if (!validatorFields.hasError()) {
+            const payload = validatorFields.getValuesObject()
+            handleEditGrade(classId,item._id,payload.title,payload.description,parseInt(payload.point))
+        }
     }
 
     const handleEdit = () => {
@@ -91,7 +108,7 @@ const CardCreator: FunctionComponent<CardCreatorProps> = ({ item, draggableProvi
             ref={draggableProvided.innerRef}
             {...draggableProvided.draggableProps}
             {...draggableProvided.dragHandleProps}
-            sx={{ boxShadow: 10 }}
+            sx={{ boxShadow: 6 }}
         >
             {/* note: `snapshot.isDragging` is useful to style or modify behaviour of dragged cells */}
             <BoxInput>
@@ -101,6 +118,9 @@ const CardCreator: FunctionComponent<CardCreatorProps> = ({ item, draggableProvi
                     label="Grade Title"
                     defaultValue={item.title}
                     variant={(item.title.length !== 0) ? "filled" : "outlined"}
+                    helperText={title.error}
+                    onChange={handleOnChange(title)}
+                    onBlur={()=>title.validate()}
                 />
                 <InputGrade
                     disabled={!isEdit}
@@ -108,6 +128,7 @@ const CardCreator: FunctionComponent<CardCreatorProps> = ({ item, draggableProvi
                     label="Grade Description"
                     defaultValue={item.description}
                     variant={(item.title.length !== 0) ? "filled" : "outlined"}
+                    oncChange={handleOnChange(description)}
                 />
                 <InputGrade
                     disabled={!isEdit}
@@ -115,6 +136,9 @@ const CardCreator: FunctionComponent<CardCreatorProps> = ({ item, draggableProvi
                     label="Grade Point"
                     defaultValue={item.point}
                     variant={(item.title.length !== 0) ? "filled" : "outlined"}
+                    helperText={point.error}
+                    onChange={handleOnChange(point)}
+                    onBlur={()=>point.validate()}
                 />
             </BoxInput>
             <BoxButton>
@@ -144,6 +168,7 @@ const CardCreator: FunctionComponent<CardCreatorProps> = ({ item, draggableProvi
                         <RemoveButton
                             variant="contained"
                             color="error"
+                            onClick={()=>handleDelete(classId,item._id)}
                         >
                             <DeleteIcon />
                         </RemoveButton>

@@ -5,10 +5,13 @@ import {
     DragDropContext, Draggable, DraggableProvided, DraggableStateSnapshot, Droppable, DroppableProvided, DropResult,
     ResponderProvided
 } from "react-beautiful-dnd";
-import { getGradeStructure } from '../../services/classroom';
+import { useAppDispatch } from "../../app/hooks";
+import { addGradeStructure, removeGradeStructure, updateGradeStructure } from '../../services/classroom';
+import { ERROR_MESSAGE } from "../../shared/messages";
+import { createAlert } from "../../slices/alert-slice";
+import AddCardCreator from "./components/add-card-creator";
 import CardCreator from './components/card-creator';
 
-import AddCardCreator from "./components/add-card-creator";
 
 /* 
 Note: this is a working example, but more can be done to improve it.
@@ -86,17 +89,54 @@ const LineGradeInfor = styled(Divider)(({ theme }) => ({
 }))
 
 interface GradeStructureProps {
-    gradeStructure: DataItem[];
+    gradeStructure: DataItem[],
+    classId: string
 }
 
-export const GradeStructure: FunctionComponent<GradeStructureProps> = ({gradeStructure}) => {
+export const GradeStructure: FunctionComponent<GradeStructureProps> = ({ gradeStructure, classId }) => {
     // cache the items provided via props in state for purposes of this demo
     const [localItems, setLocalItems] = useState<Array<DataItem>>(gradeStructure);
-    const [isAdd, setIsAdd] = React.useState(localItems.length)
+    const dispatch = useAppDispatch()
 
     useEffect(() => {
         setLocalItems(gradeStructure);
     }, [gradeStructure])
+
+    const handleAdd = async (title: string, description: string, point: number) => {
+        try {
+            await addGradeStructure(classId, title, description, point)
+
+        } catch (err) {
+            dispatch(createAlert({
+                message: ERROR_MESSAGE,
+                severity: "error"
+            }))
+        }
+    }
+
+    const handleEditGrade = async (classId:string,gradeStructureId: string, title: string, description: string, point: number) => {
+        try {
+            const response = await updateGradeStructure(classId,gradeStructureId, title, description, point)
+
+        } catch (err) {
+            dispatch(createAlert({
+                message: ERROR_MESSAGE,
+                severity: "error"
+            }))
+        }
+    }
+
+    const handleDelete = async (classId: string, gradeStructureId: string) => {
+        try {
+            const response = await removeGradeStructure(classId, gradeStructureId)
+
+        } catch (err) {
+            dispatch(createAlert({
+                message: ERROR_MESSAGE,
+                severity: "error"
+            }))
+        }
+    }
 
     // normally one would commit/save any order changes via an api call here...
     const handleDragEnd = (result: DropResult, provided?: ResponderProvided) => {
@@ -148,16 +188,19 @@ export const GradeStructure: FunctionComponent<GradeStructureProps> = ({gradeStr
                                             snapshot: DraggableStateSnapshot
                                         ) => {
                                             return (
-                                                <CardCreator 
+                                                <CardCreator
                                                     draggableProvided={draggableProvided}
                                                     item={item}
+                                                    classId={classId}
+                                                    handleDelete={handleDelete}
+                                                    handleEditGrade={handleEditGrade}
                                                 />
                                             );
                                         }}
                                     </Draggable>
                                 ))}
                                 {droppableProvided.placeholder}
-                                <AddCardCreator/>
+                                <AddCardCreator handleAdd={handleAdd} />
                             </ListContainer>
                         )}
                     </Droppable>
