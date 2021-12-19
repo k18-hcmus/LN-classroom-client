@@ -313,15 +313,15 @@ const MainStream: FunctionComponent<MainStreamProps> = ({ classroom, gradeStruct
                         Grade Structure
                     </Title>
                     {gradeStructure ? gradeStructure.gradeStructuresDetails && (
-                                gradeStructure.gradeStructuresDetails.map((value) => {
-                                    return (
-                                        <RowTitleGradeStructure>
-                                            <TitleHomeWork>{value.title}</TitleHomeWork>
-                                            <PointHomeWork>{value.point}</PointHomeWork>
-                                        </RowTitleGradeStructure>
-                                    )
-                                })
-                        ) : (
+                        gradeStructure.gradeStructuresDetails.map((value) => {
+                            return (
+                                <RowTitleGradeStructure>
+                                    <TitleHomeWork>{value.title}</TitleHomeWork>
+                                    <PointHomeWork>{value.point}</PointHomeWork>
+                                </RowTitleGradeStructure>
+                            )
+                        })
+                    ) : (
                         <TitleBox>
                             <TitleHomeWork>
                                 There are no grades structure yet
