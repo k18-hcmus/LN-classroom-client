@@ -197,9 +197,15 @@ const StudentPoint: FunctionComponent<{ classroom: Classroom }> = ({ classroom }
                                                     </PointAndReview>
                                                 </TableCell>
                                                 <TableCell >
-                                                    <NamePointHomeWork>
-                                                        {`${getStudentGrade(homework)} (${getRealStudentGrade(homework)})`}
-                                                    </NamePointHomeWork>
+                                                    <PointAndReview>
+                                                        <NamePointHomeWork>
+                                                            {`${getStudentGrade(homework)} (${getRealStudentGrade(homework)})`}
+                                                        </NamePointHomeWork>
+                                                        <ReviewButton>
+                                                            <FlagIcon />
+                                                        </ReviewButton>
+                                                    </PointAndReview>
+
                                                 </TableCell>
                                                 <Modal
                                                     open={open}

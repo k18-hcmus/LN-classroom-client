@@ -1,77 +1,87 @@
 import { Box, Button, TextField, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import React, { FunctionComponent } from "react";
-import { useAppDispatch } from "../../../app/hooks";
-import { addReviewPoint } from "../../../services/classroom";
-import { pointValidation, useValidator, useValidatorManagement } from "../../../utils/validator";
+import { emailValidation, onlyNumberValidation,useValidator, useValidatorManagement } from "../../../utils/validator";
 
+
+
+const HorizontalCenterContainer = styled(Box)(({
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+}));
 
 const CardComponent = styled(Box)(({ theme }) => ({
-    height: theme.spacing(120),
-    width: theme.spacing(150),
+    height: theme.spacing(40),
+    width: theme.spacing(80),
     display: "flex",
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
     borderRadius: theme.spacing(2.5),
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    boxShadow: 24,
-    position: 'absolute',
-    backgroundColor:theme.colors.background.white
+    position: "relative"
 }))
 
-const PointText = styled(Typography)(({ theme }) => ({
-    fontSize: theme.fontSizes.changePass,
-    marginBottom: theme.spacing(2), 
-    color:theme.colors.texting.classcode
+const EmailText = styled(Typography)(({ theme }) => ({
+    fontSize: theme.fontSizes.sizeLabel,
+    color: theme.colors.classcode,
+    margin: theme.spacing(1)
 }))
 
 const PointReview = styled(TextField)(({ theme }) => ({
-    width: "80%",
-    marginTop: theme.spacing(5),
-    marginBottom: theme.spacing(5),
+    width: "90%",
+    height: theme.spacing(10)
+}))
+
+const ButtonComponent = styled(Box)(({ theme }) => ({
+    width: "100%",
+    height: theme.spacing(10),
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+    position: "absolute",
+    bottom: theme.spacing(2),
+}))
+
+const BackToHome = styled(Button)(({ theme }) => ({
+    width: theme.spacing(25),
+    height: theme.spacing(6),
+    fontWeight: "bold",
+    fontSize: theme.fontSizes.changePass,
+    borderRadius:theme.spacing(2)
 }))
 
 const SubmitButton = styled(Button)(({ theme }) => ({
-    width: theme.spacing(30),
-    height: theme.spacing(10),
-    fontSize: theme.fontSizes.default,
-    borderRadius: theme.spacing(2),
-    fontWeight:"bold"
+    width: theme.spacing(25),
+    height: theme.spacing(6),
+    fontWeight: "bold",
+    fontSize: theme.fontSizes.changePass,
+    borderRadius:theme.spacing(2)
 }))
 
-const Description = styled(TextField)(({ theme }) => ({
-    width: "80%",
-    marginBottom:theme.spacing(3)
+const Description = styled(TextField)(({theme})=>({
+    width:"100%",
+    height:theme.spacing(10),
+    marigin:theme.spacing(1),
 }))
 
-const ReviewPoint: FunctionComponent<{idStudent:string,idHomework:string,nameHomework:string,classId:string}> = ({idStudent,idHomework,nameHomework,classId}) => {
+const ForgotPassword: FunctionComponent = () => {
     const validatorFields = useValidatorManagement()
-    const point = useValidator("point", pointValidation, "", validatorFields)
+    const point = useValidator("point", onlyNumberValidation, "", validatorFields)
     const handleOnChange = validatorFields.handleOnChange
     const hasError = validatorFields.hasError()
-    const dispatch = useAppDispatch()
-
-    const handleSubmit = async (classId:string,idHomework:string,idStudent:string,comment:[{idPerson:string,content:string}],pointReview:number,explain:string,title:string) => {
-        try {
-            await addReviewPoint(classId,{idHomework,idStudent,comment,pointReview,explain,title})
-        } catch (err) {
-            
-        }
-    }
 
     return (
+        <HorizontalCenterContainer>
             <CardComponent sx={{ boxShadow: 3 }}>
-                <PointText>Review Point</PointText>
+                <EmailText>Review Point</EmailText>
+                <EmailText>Homework name</EmailText>
                 <PointReview
-                label="Title Homework"
-                disabled
-                value={nameHomework}
-                />
-                <PointReview    
                     required
+                    fullWidth
                     label="Point you want"
                     autoComplete="point"
                     error={point.hasError()}
@@ -79,20 +89,27 @@ const ReviewPoint: FunctionComponent<{idStudent:string,idHomework:string,nameHom
                     onChange={handleOnChange(point)}
                     onBlur={() => point.validate()}
                 />
-                <Description
-                    multiline
-                    rows={5}
-                    autoComplete="description"
+                <Description  
+                autoComplete="description"
                 />
-                <SubmitButton
-                    variant="contained"
-                    color="success"
-                    disabled={hasError}
-                >
-                    Send
-                </SubmitButton>
+                <ButtonComponent>
+                    <SubmitButton
+                        variant="contained"
+                        color="success"
+                        disabled={hasError}
+                    >
+                        Send
+                    </SubmitButton>
+                    <BackToHome
+                        variant="contained"
+                        color="primary"
+                    >
+                        Back
+                    </BackToHome>
+                </ButtonComponent>
             </CardComponent>
+        </HorizontalCenterContainer>
     )
 }
 
-export default ReviewPoint;
+export default ForgotPassword;
