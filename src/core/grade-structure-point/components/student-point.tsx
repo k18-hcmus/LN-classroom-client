@@ -1,4 +1,5 @@
-import { Box, Card, IconButton, Typography } from "@mui/material";
+import FlagIcon from '@mui/icons-material/Flag';
+import { Box, Card, IconButton, Modal, Typography } from "@mui/material";
 import { styled } from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,7 +14,7 @@ import { getStudentGradeBoard } from "../../../services/classroom";
 import { createAlert } from "../../../slices/alert-slice";
 import { Classroom, GradeStructureDetail } from "../../../slices/classroom-slice";
 import SpinnerLoading from "../../components/spinner-loading";
-import FlagIcon from '@mui/icons-material/Flag';
+import ReviewPoint from "./review-point";
 
 
 const HorizontalCenterContainer = styled(Box)(({
@@ -70,18 +71,26 @@ const PointAndReview = styled(Box)(({ theme }) => ({
     alignItems: "center",
 }))
 
-const ReviewButton=styled(IconButton)(({ theme }) =>({
-    marginLeft:theme.spacing(5)
+const ReviewButton = styled(IconButton)(({ theme }) => ({
+    marginLeft: theme.spacing(8),
 }))
 
 const StudentPoint: FunctionComponent<{ classroom: Classroom }> = ({ classroom }) => {
     const gradeStructure = (classroom && classroom.gradeStructure)
     const homeworks = gradeStructure?.gradeStructuresDetails || []
     const user = useAppSelector((state) => state.userReducer.user)
-
+    const [open, setOpen] = React.useState(false);
     const [isLoading, setLoading] = useState(false)
     const [student, setStudent] = useState<any>(null)
     const dispatch = useAppDispatch()
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -174,21 +183,32 @@ const StudentPoint: FunctionComponent<{ classroom: Classroom }> = ({ classroom }
                                                     </NamePointHomeWork>
                                                 </TableCell>
                                                 <TableCell >
-                                                    <NamePointHomeWork>
-                                                        {`${homework.isFinalized ? 'Yes' : 'No'}`}
-                                                    </NamePointHomeWork>
-                                                </TableCell>
-                                                <TableCell >
                                                     <PointAndReview>
                                                         <NamePointHomeWork>
-                                                            {`${getStudentGrade(homework)} (${getRealStudentGrade(homework)})`}
+                                                            {`${homework.isFinalized ? 'Yes' : 'No'}`}
                                                         </NamePointHomeWork>
-                                                        <ReviewButton>
-                                                            <FlagIcon />
-                                                        </ReviewButton>
+                                                        {
+                                                            homework.isFinalized && (
+                                                                <ReviewButton onClick={handleOpen}>
+                                                                    <FlagIcon />
+                                                                </ReviewButton>
+                                                            )
+                                                        }
                                                     </PointAndReview>
-
                                                 </TableCell>
+                                                <TableCell >
+                                                    <NamePointHomeWork>
+                                                        {`${getStudentGrade(homework)} (${getRealStudentGrade(homework)})`}
+                                                    </NamePointHomeWork>
+                                                </TableCell>
+                                                <Modal
+                                                    open={open}
+                                                    onClose={handleClose}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                >
+                                                    <ReviewPoint idStudent={user!.studentId!} idHomework={homework._id!} nameHomework={homework.title} classId={classroom._id!}/>
+                                                </Modal>
                                             </TableRow>
                                         ))}
                                         <TableRow
@@ -213,6 +233,7 @@ const StudentPoint: FunctionComponent<{ classroom: Classroom }> = ({ classroom }
                                     </TableBody>
                                 </Table>
                             </TableContainer>
+
                         </CardPoint>
                     ) :
                         (
@@ -223,7 +244,6 @@ const StudentPoint: FunctionComponent<{ classroom: Classroom }> = ({ classroom }
                             </NoHomeWorkCard>
                         )
                 }
-
             </HorizontalCenterContainer>
     )
 }
