@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import React, { FunctionComponent } from "react";
 import { useHistory } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { getAllClassroom } from '../../services/classroom';
 import { markSeen, Notification } from "../../slices/notification-slice";
 
 const CardComponent = styled(Box)(({ theme }) => ({
@@ -54,6 +55,7 @@ const NotifyReviewPointDetail: FunctionComponent<{ data: Notification }> = ({ da
 
     const handleClick = () => {
         if (socket) {
+            dispatch(getAllClassroom)
             socket.emit("markSeen", user!._id!, data.id)
             dispatch(markSeen(data.id))
             history.push(data.path)
